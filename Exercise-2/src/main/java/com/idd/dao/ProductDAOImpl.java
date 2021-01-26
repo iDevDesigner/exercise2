@@ -24,7 +24,7 @@ public class ProductDAOImpl implements ProductDAO {
 		Session currentSession = sessionFactory.getCurrentSession();
 
 		// create a query
-		Query<Product> theQuery = currentSession.createQuery("from Product order by price", Product.class);
+		Query<Product> theQuery = currentSession.createQuery("from Product order by price DESC", Product.class);
 
 		// execute query and get result list
 		List<Product> products = theQuery.getResultList();
