@@ -1,7 +1,7 @@
 <html>
 <body>
 
-<h3>Spring CRM REST Demo</h3>
+<h3>Spring MVC REST</h3>
 
 <hr>
 
