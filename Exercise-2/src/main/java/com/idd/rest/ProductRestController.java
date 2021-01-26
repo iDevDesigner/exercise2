@@ -54,7 +54,7 @@ public class ProductRestController {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
+
 			productService.deleteProduct(produtId);
 			Map<String, String> errors = new LinkedHashMap<>();
 			errors.put("status", "404");
