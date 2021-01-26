@@ -1,8 +1,12 @@
 package com.idd.rest;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,28 +35,54 @@ public class ProductRestController {
 	// add mapping for GET /products/{produtId}
 
 	@GetMapping("/products/{produtId}")
-	public Product getCustomer(@PathVariable int produtId) {
+	public ResponseEntity<?> getCustomer(@PathVariable int produtId) {
 
-		Product theProduct = productService.getProduct(produtId);
+		try {
+			Product theProduct = productService.getProduct(produtId);
 
-		return theProduct;
+			if (theProduct != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(theProduct);
+
+			} else {
+				productService.deleteProduct(produtId);
+				Map<String, String> errors = new LinkedHashMap<>();
+				errors.put("status", "404");
+				errors.put("error", "Not Found");
+				errors.put("message", "No Product Available in this ID: " + produtId);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			productService.deleteProduct(produtId);
+			Map<String, String> errors = new LinkedHashMap<>();
+			errors.put("status", "404");
+			errors.put("error", "Not Found");
+			errors.put("message", "No Product Available in this ID: " + produtId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+
+		}
 	}
 
 	// add mapping for DELETE /products/{produtId} - delete product
 
 	@DeleteMapping("/products/{produtId}")
-	public String deleteCustomer(@PathVariable int produtId) {
+	public ResponseEntity<?> deleteCustomer(@PathVariable int produtId) {
 
 		Product tempProd = productService.getProduct(produtId);
 
 		// Handling null condition
-
-		if (tempProd == null) {
-			return "Product with id - " + produtId + " Not found";
+		if (tempProd != null) {
+			return ResponseEntity.status(HttpStatus.OK).body("Product Deleted Successfully!");
 
 		} else {
 			productService.deleteProduct(produtId);
-			return "Deleted customer id - " + produtId;
+			Map<String, String> errors = new LinkedHashMap<>();
+			errors.put("status", "404");
+			errors.put("error", "Not Found");
+			errors.put("message", "No Product Available in this ID: " + produtId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
 
 		}
 	}
