@@ -74,6 +74,7 @@ public class ProductRestController {
 
 		// Handling null condition
 		if (tempProd != null) {
+			productService.deleteProduct(produtId);
 			return ResponseEntity.status(HttpStatus.OK).body("Product Deleted Successfully!");
 
 		} else {
